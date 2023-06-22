@@ -3,6 +3,7 @@ import 'package:http/http.dart' as http;
 import 'dart:convert';
 
 import '../../constants.dart';
+import 'doctors_details.dart';
 
 class SearchPagePatient extends StatefulWidget {
   const SearchPagePatient({Key? key}) : super(key: key);
@@ -86,6 +87,17 @@ class _SearchPagePatientState extends State<SearchPagePatient> {
                   elevation: 2,
                   margin: const EdgeInsets.symmetric(vertical: 10),
                   child: ListTile(
+                    onTap: () => Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => DoctorsPage(
+                          idDoc: foundUsers[index]['id'],
+                          nomDoc: foundUsers[index]['nom'],
+                          prenomDoc: foundUsers[index]['prenom'],
+                          specialite: foundUsers[index]['specialite']['id'],
+                        ),
+                      ),
+                    ),
                     // leading: Text(foundUsers[index]["id"].toString()),
                     title: Text(
                       foundUsers[index]['nom'].toUpperCase(),

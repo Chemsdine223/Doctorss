@@ -43,6 +43,9 @@ class _PatientAppointmentsState extends State<PatientAppointments> {
                   child: Card(
                     color: Colors.lightBlue[700],
                     child: ListTile(
+                      tileColor: consultation['status'] == 'accepted'
+                          ? Colors.lightBlue[900]
+                          : Colors.white,
                       onTap: () {
                         showDialog(
                           context: context,
@@ -93,13 +96,13 @@ class _PatientAppointmentsState extends State<PatientAppointments> {
                         'Dr. ${consultation['doctor_id']['nom'].toString()}',
                         style: const TextStyle(
                           fontSize: 20,
-                          color: Colors.white,
+                          color: Colors.black,
                           fontWeight: FontWeight.bold,
                         ),
                       ),
                       subtitle: Text(
                         'Specialté: ${consultation['specialite']['nom']}',
-                        style: const TextStyle(color: Colors.white),
+                        style: const TextStyle(color: Colors.black),
                       ),
                     ),
                   ),

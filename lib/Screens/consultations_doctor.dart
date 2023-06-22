@@ -41,6 +41,30 @@ class _DoctorAppointmentsPageState extends State<DoctorAppointmentsPage> {
     }
   }
 
+  Future<void> refuseRequest(dynamic consultationId) async {
+    final url = '$baseUrl/user/consultations/$consultationId/';
+    final response = await http.put(
+      Uri.parse(url),
+      headers: {'Content-Type': 'application/json'},
+      body: jsonEncode(
+        {
+          "consultation_id": consultationId,
+        },
+      ),
+    );
+    print(response.body);
+    if (response.statusCode == 200) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Rendez vous refusé'),
+        ),
+      );
+      setState(() {
+        defaultColor = Colors.lightBlue[900]!;
+      });
+    }
+  }
+
   @override
   void initState() {
     fetchUsers().then((users) {
@@ -118,7 +142,9 @@ class _DoctorAppointmentsPageState extends State<DoctorAppointmentsPage> {
                     },
                     tileColor: foundUsers[index]['status'] == 'accepted'
                         ? Colors.green
-                        : defaultColor,
+                        : foundUsers[index]['status'] == 'refused'
+                            ? Colors.red
+                            : defaultColor,
                     // leading: const Icon(Icons.person),
                     //     Text(foundUsers[index]["patient_id"]['nom'].toString()),
                     title: Text(
