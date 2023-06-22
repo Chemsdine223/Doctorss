@@ -104,6 +104,23 @@ class _DoctorsPageState extends State<DoctorsPage> {
                     style: TextStyle(fontWeight: FontWeight.bold),
                   ),
                   SizedBox(height: MediaQuery.of(context).size.height / 40),
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(
+                          'Dr. ${widget.nomDoc}',
+                          style: const TextStyle(
+                            fontSize: 30,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                        const Icon(Icons.person),
+                      ],
+                    ),
+                  ),
+                  SizedBox(height: MediaQuery.of(context).size.height / 40),
                   Center(
                     child: Padding(
                       padding: const EdgeInsets.all(8.0),
