@@ -15,6 +15,31 @@ class DoctorAppointmentsPage extends StatefulWidget {
 class _DoctorAppointmentsPageState extends State<DoctorAppointmentsPage> {
   List<Map<String, dynamic>> allUsers = [];
   List<Map<String, dynamic>> foundUsers = [];
+  Color defaultColor = Colors.white;
+
+  Future<void> acceptRequest(dynamic consultationId) async {
+    final url = '$baseUrl/user/consultations/$consultationId/';
+    final response = await http.post(
+      Uri.parse(url),
+      headers: {'Content-Type': 'application/json'},
+      body: jsonEncode(
+        {
+          "consultation_id": consultationId,
+        },
+      ),
+    );
+    print(response.body);
+    if (response.statusCode == 200) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Accepté avec succès'),
+        ),
+      );
+      setState(() {
+        defaultColor = Colors.lightBlue[900]!;
+      });
+    }
+  }
 
   @override
   void initState() {
@@ -31,8 +56,8 @@ class _DoctorAppointmentsPageState extends State<DoctorAppointmentsPage> {
   }
 
   Future<List<Map<String, dynamic>>> fetchUsers() async {
-    final response = await http.get(Uri.parse(
-        '$baseUrl/user/consultations/${AuthServices.id}/'));
+    final response = await http
+        .get(Uri.parse('$baseUrl/user/consultations/${AuthServices.id}/'));
     if (response.statusCode == 200) {
       final data = jsonDecode(response.body);
       final List<Map<String, dynamic>> users =
@@ -88,8 +113,13 @@ class _DoctorAppointmentsPageState extends State<DoctorAppointmentsPage> {
                   elevation: 2,
                   margin: const EdgeInsets.symmetric(vertical: 10),
                   child: ListTile(
-                    onTap: (){},
-                    // leading:
+                    onTap: () {
+                      // defaultColor = Colors.green;
+                    },
+                    tileColor: foundUsers[index]['status'] == 'accepted'
+                        ? Colors.green
+                        : defaultColor,
+                    // leading: const Icon(Icons.person),
                     //     Text(foundUsers[index]["patient_id"]['nom'].toString()),
                     title: Text(
                       foundUsers[index]["patient_id"]['nom'].toString(),
@@ -98,7 +128,13 @@ class _DoctorAppointmentsPageState extends State<DoctorAppointmentsPage> {
                         color: Colors.black,
                       ),
                     ),
-                    
+                    trailing: IconButton(
+                      onPressed: () {
+                        acceptRequest(foundUsers[index]['id']);
+                      },
+                      icon: const Icon(Icons.done),
+                    ),
+
                     subtitle: Text(
                       foundUsers[index]["heure_de_consultation"],
                     ),

@@ -1,9 +1,9 @@
-import 'package:doctors/Data/auth_service.dart';
+import 'package:doctors/constants.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 
-import '../constants.dart';
+import '../Data/auth_service.dart';
 
 class ScheduleScreen extends StatefulWidget {
   const ScheduleScreen({Key? key}) : super(key: key);
@@ -12,20 +12,17 @@ class ScheduleScreen extends StatefulWidget {
   _ScheduleScreenState createState() => _ScheduleScreenState();
 }
 
-// don't forget to send the deafault intervals in the init state !!!!!!!!!!!
-// don't forget to send the deafault intervals in the init state !!!!!!!!!!!
-// don't forget to send the deafault intervals in the init state !!!!!!!!!!!
-// don't forget to send the deafault intervals in the init state !!!!!!!!!!!
-
 class _ScheduleScreenState extends State<ScheduleScreen> {
-  // Future<void>
+  Map<String, String> selectedHours = {
+    'Lundi': '',
+    'Mardi': '',
+    'Mercredi': '',
+    'Jeudi': '',
+    'Vendredi': '',
+    'Samedi': '',
+    'Dimanche': '',
+  };
 
-  @override
-  void initState() {
-    super.initState();
-  }
-
-  dynamic schedule;
   final List<String> days = [
     'Lundi',
     'Mardi',
@@ -33,239 +30,221 @@ class _ScheduleScreenState extends State<ScheduleScreen> {
     'Jeudi',
     'Vendredi',
     'Samedi',
-    'Dimanche'
+    'Dimanche',
   ];
-
-  // Future
 
   final List<String> hours = [
-    "9h",
-    "10h",
-    "11h",
-    "12h",
-    "13h",
-    "14h",
-    "15h",
-    "16h",
-    "17h",
-    "18h",
-    "19h",
-    "20h",
-    "21h",
-    "22h",
+    "9H",
+    "10H",
+    "11H",
+    "12H",
+    "13H",
+    "14H",
+    "15H",
+    "16H",
+    "17H",
+    "18H",
+    "19H",
+    "20H",
+    "21H",
+    "22H",
   ];
 
-  Map<String, Map<String, String>> intervals = {
-    'Lundi': {'start': '9h', 'end': '10h'},
-    'Mardi': {'start': '10h', 'end': '11h'},
-    'Mercredi': {'start': '11h', 'end': '12h'},
-    'Jeudi': {'start': '12h', 'end': '13h'},
-    'Vendredi': {'start': '13h', 'end': '14h'},
-    'Samedi': {'start': '14h', 'end': '15h'},
-    'Dimanche': {'start': '15h', 'end': '16h'},
-  };
-
-  void _modifyInterval(String day, String startHour, String endHour) {
-    setState(() {
-      intervals[day] = {'start': startHour, 'end': endHour};
-    });
+  @override
+  void initState() {
+    super.initState();
+    getInitialValues();
   }
 
-  void _sendIntervals() {
-    print(AuthServices.id);
-    Map<String, String> requestBody = {
-      'doctor': AuthServices.id,
-      'lundi':
-          '${intervals["Lundi"]!["start"]} - ${intervals["Lundi"]!["end"]}',
-      'mardi':
-          '${intervals["Mardi"]!["start"]} - ${intervals["Mardi"]!["end"]}',
-      'mercredi':
-          '${intervals["Mercredi"]!["start"]} - ${intervals["Mercredi"]!["end"]}',
-      'jeudi':
-          '${intervals["Jeudi"]!["start"]} - ${intervals["Jeudi"]!["end"]}',
-      'vendredi':
-          '${intervals["Vendredi"]!["start"]} - ${intervals["Vendredi"]!["end"]}',
-      'samedi':
-          '${intervals["Samedi"]!["start"]} - ${intervals["Samedi"]!["end"]}',
-      'dimanche':
-          '${intervals["Dimanche"]!["start"]} - ${intervals["Dimanche"]!["end"]}',
-    };
+  Future<void> getInitialValues() async {
+    final url =
+        '$baseUrl/user/schedules/${AuthServices.id}/'; // Replace with the actual URL
+    final response = await http.get(Uri.parse(url));
 
-    http.post(
-      Uri.parse('$baseUrl/user/schedule/'),
-      body: json.encode(requestBody),
-      headers: {'Content-Type': 'application/json'},
-    ).then((response) {
-      if (response.statusCode == 200) {
-        // Interval update successful
-        // Handle the response accordingly
-        print('Interval update successful');
-        print(response.body);
-        ScaffoldMessenger.of(context).showMaterialBanner(
-          MaterialBanner(
-            backgroundColor: Colors.lightBlue,
-            content: const Text(
-              'mis à jour avec success',
-              style: TextStyle(
-                color: Colors.white,
-                fontWeight: FontWeight.bold,
+    if (response.statusCode == 200) {
+      await Future.delayed(const Duration(milliseconds: 2));
+      final data = jsonDecode(response.body);
+      setState(() {
+        // selectedHours = Map<String, String>.from(data);
+        selectedHours = {
+          'Lundi': data['lundi'],
+          'Mardi': data['mardi'],
+          'Mercredi': data['mercredi'],
+          'Jeudi': data['jeudi'],
+          'Vendredi': data['vendredi'],
+          'Samedi': data['samedi'],
+          'Dimanche': data['dimanche'],
+        };
+      });
+      print(response.body);
+    } else {
+      // Handle error
+      print('Error: ${response.statusCode}');
+    }
+  }
+
+  void showHoursDialog(String day) {
+    String selectedStartHour = hours[0];
+    String selectedEndHour = hours[0];
+
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text('Heures de $day'),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              DropdownButton<String>(
+                value: selectedStartHour,
+                onChanged: (String? newValue) {
+                  setState(() {
+                    selectedStartHour = newValue!;
+                  });
+                },
+                items: hours.map((String hour) {
+                  return DropdownMenuItem<String>(
+                    value: hour,
+                    child: Text(hour),
+                  );
+                }).toList(),
               ),
-            ),
-            actions: [
-              IconButton(
-                  onPressed: () {
-                    ScaffoldMessenger.of(context).hideCurrentMaterialBanner();
-                  },
-                  icon: const Icon(
-                    Icons.done,
-                    color: Colors.white,
-                  ))
+              const SizedBox(height: 16),
+              DropdownButton<String>(
+                value: selectedEndHour,
+                onChanged: (String? newValue) {
+                  setState(() {
+                    selectedEndHour = newValue!;
+                  });
+                },
+                items: hours.map((String hour) {
+                  return DropdownMenuItem<String>(
+                    value: hour,
+                    child: Text(hour),
+                  );
+                }).toList(),
+              ),
             ],
           ),
+          actions: [
+            ElevatedButton(
+              onPressed: () {
+                setState(() {
+                  selectedHours[day] = '$selectedStartHour - $selectedEndHour';
+                });
+                Navigator.pop(context);
+              },
+              child: const Text('Savegarder'),
+            ),
+          ],
         );
-      } else {
-        // Interval update failed
-        // Handle the error response accordingly
-        print('Interval update failed');
-      }
-    }).catchError((error) {
-      // Error occurred during the API request
-      // Handle the error accordingly
-      print('Error occurred: $error');
-    });
+      },
+    );
+  }
+
+  Future<void> postSelectedHours() async {
+    final url = '$baseUrl/user/schedule/'; // Replace with the actual URL
+
+    final requestBody = {
+      "doctor": AuthServices.id,
+      "lundi": selectedHours['Lundi'],
+      "mardi": selectedHours['Mardi'],
+      "mercredi": selectedHours['Mercredi'],
+      "jeudi": selectedHours['Jeudi'],
+      "vendredi": selectedHours['Vendredi'],
+      "samedi": selectedHours['Samedi'],
+      "dimanche": selectedHours['Dimanche'],
+    };
+
+    final response = await http.post(
+      Uri.parse(url),
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+      },
+      body: jsonEncode(requestBody),
+    );
+
+    if (response.statusCode == 200) {
+      final responseData = jsonDecode(response.body);
+      setState(
+        () {
+          selectedHours['Lundi'] = responseData['lundi'];
+          selectedHours['Mardi'] = responseData['mardi'];
+          selectedHours['Mercredi'] = responseData['mercredi'];
+          selectedHours['Jeudi'] = responseData['jeudi'];
+          selectedHours['Vendredi'] = responseData['vendredi'];
+          selectedHours['Samedi'] = responseData['samedi'];
+          selectedHours['Dimanche'] = responseData['dimanche'];
+        },
+      );
+      ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Mis à jour avec succès')));
+      print('Selected hours posted successfully!');
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Une erreur est survenue')));
+      print('Error: ${response.statusCode}');
+    }
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.white,
       body: SingleChildScrollView(
         child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Center(
               child: Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: Image.asset(
                   'Img/schedule.png',
-                  height: MediaQuery.of(context).size.height / 5,
+                  height: MediaQuery.of(context).size.height / 4,
                 ),
               ),
             ),
-            SizedBox(height: MediaQuery.of(context).size.height / 36),
-            const Text(
-              'Ajustez vos horaires',
-              style: TextStyle(fontWeight: FontWeight.bold),
-            ),
-            SizedBox(
-              height: MediaQuery.of(context).size.height / 46,
-            ),
-            SizedBox(
-              // color: Colors.green,
-              height: MediaQuery.of(context).size.height / 2.5,
-              child: ListView.builder(
-                itemCount: days.length,
-                itemBuilder: (context, index) {
-                  final day = days[index];
-                  final startHour = intervals[day]!['start'];
-                  final endHour = intervals[day]!['end'];
-
-                  return ListTile(
-                    title: Text(day),
-                    subtitle: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text('$startHour - $endHour'),
-                        const SizedBox(width: 16),
-                        IconButton(
-                          icon: const Icon(Icons.edit),
-                          onPressed: () => _showIntervalDialog(
-                              context, day, startHour!, endHour!),
-                        ),
-                      ],
-                    ),
-                  );
-                },
+            const Center(
+              child: Text(
+                'Ajustez vos horaires',
+                style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                ),
               ),
             ),
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: MaterialButton(
-                onPressed: () {
-                  _sendIntervals();
-                },
-                color: Colors.lightBlue[800],
-                height: MediaQuery.of(context).size.height / 18,
-                minWidth: MediaQuery.of(context).size.width / 3,
-                child: const Text(
-                  'Confirmer',
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontWeight: FontWeight.bold,
-                  ),
+            Container(
+              color: Colors.white,
+              height: MediaQuery.of(context).size.height / 2.6,
+              child: SingleChildScrollView(
+                child: Column(
+                  children: days.map((day) {
+                    return ListTile(
+                      onTap: () {
+                        showHoursDialog(day);
+                      },
+                      trailing: const Icon(Icons.edit),
+                      title: Text(day),
+                      subtitle: Text(selectedHours[day] ?? ''),
+                    );
+                  }).toList(),
+                ),
+              ),
+            ),
+            MaterialButton(
+              color: Colors.lightBlue[900],
+              onPressed: () {
+                postSelectedHours();
+              },
+              child: const Text(
+                'Confirmer',
+                style: TextStyle(
+                  color: Colors.white,
+                  fontWeight: FontWeight.bold,
                 ),
               ),
             ),
           ],
         ),
       ),
-      // floatingActionButton: FloatingActionButton(
-      //   onPressed: _sendIntervals,
-      //   child: const Icon(Icons.check),
-      // ),
-    );
-  }
-
-  void _showIntervalDialog(
-      BuildContext context, String day, String startHour, String endHour) {
-    showDialog(
-      context: context,
-      builder: (context) {
-        String newStartHour = startHour;
-        String newEndHour = endHour;
-
-        return AlertDialog(
-          title: Text(day),
-          content: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              DropdownButton<String>(
-                value: newStartHour,
-                items: hours.map((hour) {
-                  return DropdownMenuItem<String>(
-                    value: hour,
-                    child: Text(hour),
-                  );
-                }).toList(),
-                onChanged: (value) {
-                  newStartHour = value!;
-                },
-              ),
-              const SizedBox(height: 16),
-              DropdownButton<String>(
-                value: newEndHour,
-                items: hours.map((hour) {
-                  return DropdownMenuItem<String>(
-                    value: hour,
-                    child: Text(hour),
-                  );
-                }).toList(),
-                onChanged: (value) {
-                  newEndHour = value!;
-                },
-              ),
-            ],
-          ),
-          actions: [
-            TextButton(
-              onPressed: () {
-                _modifyInterval(day, newStartHour, newEndHour);
-                Navigator.pop(context);
-              },
-              child: const Text('Confirm'),
-            ),
-          ],
-        );
-      },
     );
   }
 }
