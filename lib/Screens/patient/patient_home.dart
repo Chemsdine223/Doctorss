@@ -141,7 +141,6 @@ class _HomePatientPageState extends State<HomePatientPage> {
                             SizedBox(
                                 height:
                                     MediaQuery.of(context).size.height / 60),
-
                             Padding(
                               padding: const EdgeInsets.all(8.0),
                               child: Center(
@@ -293,7 +292,9 @@ class _HomePatientPageState extends State<HomePatientPage> {
                                                                 );
                                                                 print(
                                                                     consultationss);
-                                                                if (consultationss) {
+                                                                if (consultationss[
+                                                                        0] ==
+                                                                    true) {
                                                                   ScaffoldMessenger.of(
                                                                           context)
                                                                       .showSnackBar(const SnackBar(
@@ -302,9 +303,9 @@ class _HomePatientPageState extends State<HomePatientPage> {
                                                                 } else {
                                                                   ScaffoldMessenger.of(
                                                                           context)
-                                                                      .showSnackBar(const SnackBar(
+                                                                      .showSnackBar(SnackBar(
                                                                           content:
-                                                                              Text('Vous avez déjà une consultation avec ce docteur ..')));
+                                                                              Text('${consultationss[1].toString()}')));
                                                                 }
                                                                 // if () {
                                                                 // print(foundUsers[index]["id"]

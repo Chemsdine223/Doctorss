@@ -39,20 +39,31 @@ class _PatientHomeState extends State<PatientHome> {
         // centerTitle: true,
         actions: [
           IconButton(
-              onPressed: () {
-                print(_selectedIndex);
-              },
-              icon: _selectedIndex != 1
-                  ? IconButton(
-                      onPressed: () =>
-                          Navigator.pushReplacement(context, MaterialPageRoute(
-                            builder: (context) {
-                              AuthServices.clearTokens();
-                              return const Login();
-                            },
-                          )),
-                      icon: const Icon(Icons.logout))
-                  : const Icon(Icons.person)),
+            onPressed: () {
+              print(_selectedIndex);
+            },
+            icon: _selectedIndex != 1
+                ? IconButton(
+                    onPressed: () =>
+                        Navigator.pushReplacement(context, MaterialPageRoute(
+                      builder: (context) {
+                        AuthServices.clearTokens();
+                        return const Login();
+                      },
+                    )),
+                    icon: const Icon(Icons.logout),
+                  )
+                : IconButton(
+                    onPressed: () =>
+                        Navigator.pushReplacement(context, MaterialPageRoute(
+                      builder: (context) {
+                        AuthServices.clearTokens();
+                        return const Login();
+                      },
+                    )),
+                    icon: const Icon(Icons.logout),
+                  ),
+          ),
         ],
         title: Row(
           mainAxisAlignment: _selectedIndex != 1

@@ -34,20 +34,20 @@ class _ScheduleScreenState extends State<ScheduleScreen> {
   ];
 
   final List<String> hours = [
-    "9H",
-    "10H",
-    "11H",
-    "12H",
-    "13H",
-    "14H",
-    "15H",
-    "16H",
-    "17H",
-    "18H",
-    "19H",
-    "20H",
-    "21H",
-    "22H",
+    "9h",
+    "10h",
+    "11h",
+    "12h",
+    "13h",
+    "14h",
+    "15h",
+    "16h",
+    "17h",
+    "18h",
+    "19h",
+    "20h",
+    "21h",
+    "22h",
   ];
 
   @override

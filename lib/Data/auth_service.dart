@@ -209,7 +209,7 @@ class AuthServices {
 // }
 
 class PatientRepo {
-  Future<bool> createConsultation(
+  Future<List<dynamic>> createConsultation(
     dynamic docID,
     dynamic patientID,
     dynamic specialite,
@@ -234,6 +234,7 @@ class PatientRepo {
     );
     print(response.body);
     print(response.statusCode);
+    final data = jsonDecode(response.body);
 
     if (response.statusCode == 201) {
       // final data = jsonDecode(response.body);
@@ -245,9 +246,9 @@ class PatientRepo {
       print('his is the user data helloooooo');
 
       // await AuthServices.saveTokens();
-      return true;
+      return [true, 'Consultation crée avec succès '];
     } else {
-      return false;
+      return [false, data['error']];
     }
   }
 

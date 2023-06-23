@@ -207,16 +207,18 @@ class _DoctorsPageState extends State<DoctorsPage> {
                                     dateinput.text,
                                   );
                                   print(consultationss);
-                                  if (consultationss) {
+                                  if (consultationss[0] == true) {
                                     ScaffoldMessenger.of(context).showSnackBar(
                                         const SnackBar(
                                             content: Text(
                                                 'Consultation crée avec succès')));
                                   } else {
                                     ScaffoldMessenger.of(context).showSnackBar(
-                                        const SnackBar(
-                                            content: Text(
-                                                'Vous avez déjà une consultation avec ce docteur ..')));
+                                      const SnackBar(
+                                        content: Text(
+                                            'Vous avez déjà une consultation avec ce docteur ..'),
+                                      ),
+                                    );
                                   }
                                   // if () {
                                   // print(foundUsers[index]["id"]
