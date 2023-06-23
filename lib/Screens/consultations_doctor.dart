@@ -42,7 +42,7 @@ class _DoctorAppointmentsPageState extends State<DoctorAppointmentsPage> {
     }
   }
 
-  Future<void> acceptRequest(dynamic consultationId) async {
+  Future<void> acceptRequest(dynamic consultationId, dynamic index) async {
     final url = '$baseUrl/user/consultations/$consultationId/';
     final response = await http.post(
       Uri.parse(url),
@@ -61,12 +61,12 @@ class _DoctorAppointmentsPageState extends State<DoctorAppointmentsPage> {
         ),
       );
       setState(() {
-        defaultColor = Colors.lightBlue[900]!;
+        foundUsers[index]['status'] = 'accepted';
       });
     }
   }
 
-  Future<void> refuseRequest(dynamic consultationId) async {
+  Future<void> refuseRequest(dynamic consultationId, dynamic index) async {
     final url = '$baseUrl/user/consultations/$consultationId/';
     final response = await http.put(
       Uri.parse(url),
@@ -85,7 +85,8 @@ class _DoctorAppointmentsPageState extends State<DoctorAppointmentsPage> {
         ),
       );
       setState(() {
-        defaultColor = Colors.red[600]!;
+        foundUsers[index]['status'] = 'refused';
+        // defaultColor = Colors.red[600]!;
       });
     }
   }
@@ -232,9 +233,11 @@ class _DoctorAppointmentsPageState extends State<DoctorAppointmentsPage> {
                                   } else {
                                     Navigator.pop(context);
                                     ScaffoldMessenger.of(context).showSnackBar(
-                                        const SnackBar(
-                                            content: Text(
-                                                'Ajout de description echoué')));
+                                      const SnackBar(
+                                        content:
+                                            Text('Ajout de description echoué'),
+                                      ),
+                                    );
                                   }
 
                                   print(foundUsers[index]['id']);
@@ -275,7 +278,7 @@ class _DoctorAppointmentsPageState extends State<DoctorAppointmentsPage> {
                         children: [
                           IconButton(
                             onPressed: () {
-                              acceptRequest(foundUsers[index]['id']);
+                              acceptRequest(foundUsers[index]['id'], index);
                               // setState(() {
                               //   defaultColor = Colors.greenAccent;
                               // });
@@ -284,7 +287,7 @@ class _DoctorAppointmentsPageState extends State<DoctorAppointmentsPage> {
                           ),
                           IconButton(
                             onPressed: () {
-                              refuseRequest(foundUsers[index]['id']);
+                              refuseRequest(foundUsers[index]['id'], index);
                             },
                             icon: const Icon(Icons.close),
                           ),
