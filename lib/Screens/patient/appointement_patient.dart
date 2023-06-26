@@ -26,6 +26,19 @@ class _PatientAppointmentsState extends State<PatientAppointments> {
     }
   }
 
+  Future<void> deleteConsultation(dynamic idConsultation) async {
+    final response = await http.delete(
+      Uri.parse('$baseUrl/user/delete/$idConsultation/'),
+    );
+
+    if (response.statusCode == 200) {
+      setState(() {});
+      print(response.body);
+    } else {
+      print(response.body);
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -44,10 +57,22 @@ class _PatientAppointmentsState extends State<PatientAppointments> {
                     elevation: 2,
                     color: Colors.lightBlue[700],
                     child: ListTile(
+                      trailing: consultation['status'] == 'accepted'
+                          ? null
+                          : IconButton(
+                              onPressed: () {
+                                print(consultation['id']);
+                                deleteConsultation(consultation['id']);
+
+                                // setState(() {});
+                              },
+                              icon: Icon(Icons.close),
+                            ),
                       tileColor: consultation['status'] == 'accepted'
                           ? Colors.lightBlue[900]
                           : Colors.red,
                       onTap: () {
+                        print(consultation['id']);
                         showDialog(
                           context: context,
                           builder: (context) {

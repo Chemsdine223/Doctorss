@@ -214,9 +214,9 @@ class _DoctorsPageState extends State<DoctorsPage> {
                                                 'Consultation crée avec succès')));
                                   } else {
                                     ScaffoldMessenger.of(context).showSnackBar(
-                                      const SnackBar(
+                                      SnackBar(
                                         content: Text(
-                                            'Vous avez déjà une consultation avec ce docteur ..'),
+                                            '${consultationss[1].toString()}'),
                                       ),
                                     );
                                   }

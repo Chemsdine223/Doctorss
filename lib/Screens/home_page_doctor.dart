@@ -216,16 +216,18 @@ class _ScheduleScreenState extends State<ScheduleScreen> {
               height: MediaQuery.of(context).size.height / 2.6,
               child: SingleChildScrollView(
                 child: Column(
-                  children: days.map((day) {
-                    return ListTile(
-                      onTap: () {
-                        showHoursDialog(day);
-                      },
-                      trailing: const Icon(Icons.edit),
-                      title: Text(day),
-                      subtitle: Text(selectedHours[day] ?? ''),
-                    );
-                  }).toList(),
+                  children: days.map(
+                    (day) {
+                      return ListTile(
+                        onTap: () {
+                          showHoursDialog(day);
+                        },
+                        trailing: const Icon(Icons.edit),
+                        title: Text(day),
+                        subtitle: Text(selectedHours[day] ?? ''),
+                      );
+                    },
+                  ).toList(),
                 ),
               ),
             ),
