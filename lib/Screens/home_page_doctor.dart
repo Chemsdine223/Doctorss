@@ -90,53 +90,58 @@ class _ScheduleScreenState extends State<ScheduleScreen> {
     showDialog(
       context: context,
       builder: (BuildContext context) {
-        return AlertDialog(
-          title: Text('Heures de $day'),
-          content: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              DropdownButton<String>(
-                value: selectedStartHour,
-                onChanged: (String? newValue) {
-                  setState(() {
-                    selectedStartHour = newValue!;
-                  });
-                },
-                items: hours.map((String hour) {
-                  return DropdownMenuItem<String>(
-                    value: hour,
-                    child: Text(hour),
-                  );
-                }).toList(),
+        return StatefulBuilder(
+          builder: (context, setState) {
+            return AlertDialog(
+              title: Text('Heures de $day'),
+              content: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  DropdownButton<String>(
+                    value: selectedStartHour,
+                    onChanged: (String? newValue) {
+                      setState(() {
+                        selectedStartHour = newValue!;
+                      });
+                    },
+                    items: hours.map((String hour) {
+                      return DropdownMenuItem<String>(
+                        value: hour,
+                        child: Text(hour),
+                      );
+                    }).toList(),
+                  ),
+                  const SizedBox(height: 16),
+                  DropdownButton<String>(
+                    value: selectedEndHour,
+                    onChanged: (String? newValue) {
+                      setState(() {
+                        selectedEndHour = newValue!;
+                      });
+                    },
+                    items: hours.map((String hour) {
+                      return DropdownMenuItem<String>(
+                        value: hour,
+                        child: Text(hour),
+                      );
+                    }).toList(),
+                  ),
+                ],
               ),
-              const SizedBox(height: 16),
-              DropdownButton<String>(
-                value: selectedEndHour,
-                onChanged: (String? newValue) {
-                  setState(() {
-                    selectedEndHour = newValue!;
-                  });
-                },
-                items: hours.map((String hour) {
-                  return DropdownMenuItem<String>(
-                    value: hour,
-                    child: Text(hour),
-                  );
-                }).toList(),
-              ),
-            ],
-          ),
-          actions: [
-            ElevatedButton(
-              onPressed: () {
-                setState(() {
-                  selectedHours[day] = '$selectedStartHour - $selectedEndHour';
-                });
-                Navigator.pop(context);
-              },
-              child: const Text('Savegarder'),
-            ),
-          ],
+              actions: [
+                ElevatedButton(
+                  onPressed: () {
+                    setState(() {
+                      selectedHours[day] =
+                          '$selectedStartHour - $selectedEndHour';
+                    });
+                    Navigator.pop(context);
+                  },
+                  child: const Text('Savegarder'),
+                ),
+              ],
+            );
+          },
         );
       },
     );

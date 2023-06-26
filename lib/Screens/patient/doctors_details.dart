@@ -191,137 +191,146 @@ class _DoctorsPageState extends State<DoctorsPage> {
                       showDialog(
                         context: context,
                         builder: (context) {
-                          return AlertDialog(
-                            actions: [
-                              IconButton(
-                                onPressed: () async {
-                                  // if () {
+                          return StatefulBuilder(
+                            builder: (context, setState) {
+                              return AlertDialog(
+                                actions: [
+                                  IconButton(
+                                    onPressed: () async {
+                                      // if () {
 
-                                  // }
-                                  final consultationss =
-                                      await PatientRepo().createConsultation(
-                                    widget.idDoc,
-                                    AuthServices.id,
-                                    widget.specialite,
-                                    selectedHourRange,
-                                    dateinput.text,
-                                  );
-                                  print(consultationss);
-                                  if (consultationss[0] == true) {
-                                    ScaffoldMessenger.of(context).showSnackBar(
-                                        const SnackBar(
+                                      // }
+                                      final consultationss = await PatientRepo()
+                                          .createConsultation(
+                                        widget.idDoc,
+                                        AuthServices.id,
+                                        widget.specialite,
+                                        selectedHourRange,
+                                        dateinput.text,
+                                      );
+                                      print(consultationss);
+                                      if (consultationss[0] == true) {
+                                        ScaffoldMessenger.of(context)
+                                            .showSnackBar(const SnackBar(
+                                                content: Text(
+                                                    'Consultation crée avec succès')));
+                                      } else {
+                                        ScaffoldMessenger.of(context)
+                                            .showSnackBar(
+                                          SnackBar(
                                             content: Text(
-                                                'Consultation crée avec succès')));
-                                  } else {
-                                    ScaffoldMessenger.of(context).showSnackBar(
-                                      SnackBar(
-                                        content: Text(
-                                            '${consultationss[1].toString()}'),
-                                      ),
-                                    );
-                                  }
-                                  // if () {
-                                  // print(foundUsers[index]["id"]
-                                  //     .toString());
+                                                '${consultationss[1].toString()}'),
+                                          ),
+                                        );
+                                      }
+                                      // if () {
+                                      // print(foundUsers[index]["id"]
+                                      //     .toString());
 
-                                  // }
-                                  Navigator.pop(context);
-                                },
-                                icon: const Icon(Icons.done),
-                              )
-                            ],
-                            // backgroundColor: Colors.lightBlue[400],
-                            content: SizedBox(
-                              // color: Colors.lightBlue[400],
-                              height: 400,
-                              width: 300,
+                                      // }
+                                      Navigator.pop(context);
+                                    },
+                                    icon: const Icon(Icons.done),
+                                  )
+                                ],
+                                // backgroundColor: Colors.lightBlue[400],
+                                content: SizedBox(
+                                  // color: Colors.lightBlue[400],
+                                  height: 400,
+                                  width: 300,
 
-                              child: Column(
-                                // mainAxisAlignment:
-                                //     // MainAxisAlignment.start,
-                                children: [
-                                  const Text(
-                                    'Choisissez l\'heure',
-                                    style: TextStyle(
-                                      // color: Colors.white,
-                                      fontWeight: FontWeight.bold,
-                                    ),
-                                  ),
-                                  DropdownButtonHideUnderline(
-                                    child: DropdownButton<String>(
-                                      hint: const Text(
+                                  child: Column(
+                                    // mainAxisAlignment:
+                                    //     // MainAxisAlignment.start,
+                                    children: [
+                                      const Text(
                                         'Choisissez l\'heure',
                                         style: TextStyle(
+                                          // color: Colors.white,
                                           fontWeight: FontWeight.bold,
                                         ),
                                       ),
-                                      value: selectedHourRange,
-                                      onChanged: (String? newValue) {
-                                        setState(() {
-                                          selectedHourRange = newValue;
-                                        });
-                                        print(newValue);
-                                        setState(() {});
-                                      },
-                                      items: hourRanges.map((String value) {
-                                        return DropdownMenuItem<String>(
-                                          value: value,
-                                          child: Text(value),
-                                        );
-                                      }).toList(),
-                                    ),
-                                  ),
-                                  const Text(
-                                    'Choisissez la date',
-                                    style: TextStyle(
-                                      // color: Colors.white,
-                                      fontWeight: FontWeight.bold,
-                                    ),
-                                  ),
-                                  const SizedBox(height: 10),
-                                  TextField(
-                                    readOnly: true,
-                                    // validator: (value) {
-                                    //   if (value!.isEmpty) {
-                                    //     return 'Please enter a date !';
-                                    //   }
-                                    //   return null;
-                                    // },
-                                    controller: dateinput,
-                                    decoration: InputDecoration(
-                                        iconColor: Colors.blue,
-                                        border: const OutlineInputBorder(),
-                                        suffixIcon: IconButton(
-                                            onPressed: () async {
-                                              DateTime? pickedDate =
-                                                  await showDatePicker(
-                                                      context: context,
-                                                      initialDate:
-                                                          DateTime.now(),
-                                                      firstDate: DateTime(2000),
-                                                      lastDate: DateTime(2101));
+                                      DropdownButtonHideUnderline(
+                                        child: DropdownButton<String>(
+                                          hint: const Text(
+                                            'Choisissez l\'heure',
+                                            style: TextStyle(
+                                              fontWeight: FontWeight.bold,
+                                            ),
+                                          ),
+                                          value: selectedHourRange,
+                                          onChanged: (String? newValue) {
+                                            setState(() {
+                                              selectedHourRange = newValue;
+                                            });
+                                            print(newValue);
+                                            setState(() {});
+                                          },
+                                          items: hourRanges.map((String value) {
+                                            return DropdownMenuItem<String>(
+                                              value: value,
+                                              child: Text(value),
+                                            );
+                                          }).toList(),
+                                        ),
+                                      ),
+                                      const Text(
+                                        'Choisissez la date',
+                                        style: TextStyle(
+                                          // color: Colors.white,
+                                          fontWeight: FontWeight.bold,
+                                        ),
+                                      ),
+                                      const SizedBox(height: 10),
+                                      TextField(
+                                        readOnly: true,
+                                        // validator: (value) {
+                                        //   if (value!.isEmpty) {
+                                        //     return 'Please enter a date !';
+                                        //   }
+                                        //   return null;
+                                        // },
+                                        controller: dateinput,
+                                        decoration: InputDecoration(
+                                            iconColor: Colors.blue,
+                                            border: const OutlineInputBorder(),
+                                            suffixIcon: IconButton(
+                                                onPressed: () async {
+                                                  DateTime? pickedDate =
+                                                      await showDatePicker(
+                                                          context: context,
+                                                          initialDate:
+                                                              DateTime.now(),
+                                                          firstDate:
+                                                              DateTime(2000),
+                                                          lastDate:
+                                                              DateTime(2101));
 
-                                              if (pickedDate != null) {
-                                                String formattedDate =
-                                                    DateFormat('yyyy-MM-dd')
-                                                        .format(pickedDate);
+                                                  if (pickedDate != null) {
+                                                    String formattedDate =
+                                                        DateFormat('yyyy-MM-dd')
+                                                            .format(pickedDate);
 
-                                                dateinput.text = formattedDate;
-                                              } else {
-                                                print("Date is not selected");
-                                              }
-                                            },
-                                            icon: const Icon(
-                                              Icons.calendar_month,
-                                            )),
-                                        // icon: Icon(Icons.calendar_today),
-                                        labelText: 'Entrez une date'),
-                                    // readOnly: true,
+                                                    dateinput.text =
+                                                        formattedDate;
+                                                  } else {
+                                                    print(
+                                                        "Date is not selected");
+                                                  }
+                                                },
+                                                icon: const Icon(
+                                                  Icons.calendar_month,
+                                                )),
+                                            // icon: Icon(Icons.calendar_today),
+                                            labelText: 'Entrez une date'),
+                                        // readOnly: true,
+                                      ),
+                                    ],
                                   ),
-                                ],
-                              ),
-                              // color: Colors.red,
-                            ),
+                                  // color: Colors.red,
+                                ),
+                              );
+                            },
                           );
                         },
                       );
