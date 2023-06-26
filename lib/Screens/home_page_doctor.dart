@@ -84,8 +84,12 @@ class _ScheduleScreenState extends State<ScheduleScreen> {
   }
 
   void showHoursDialog(String day) {
-    String selectedStartHour = hours[0];
-    String selectedEndHour = hours[0];
+    String selectedStartHour = selectedHours[day] != null
+        ? selectedHours[day]!.split(' - ')[0]
+        : hours[0];
+    String selectedEndHour = selectedHours[day] != null
+        ? selectedHours[day]!.split(' - ')[1]
+        : hours[0];
 
     showDialog(
       context: context,
