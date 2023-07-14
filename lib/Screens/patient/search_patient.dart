@@ -15,6 +15,7 @@ class SearchPagePatient extends StatefulWidget {
 class _SearchPagePatientState extends State<SearchPagePatient> {
   List<Map<String, dynamic>> allUsers = [];
   List<Map<String, dynamic>> foundUsers = [];
+  String searchQuery = '';
 
   @override
   void initState() {
@@ -47,10 +48,14 @@ class _SearchPagePatientState extends State<SearchPagePatient> {
     if (searchValue.isEmpty) {
       results = allUsers;
     } else {
-      results = allUsers
-          .where((user) =>
-              user["nom"].toLowerCase().contains(searchValue.toLowerCase()))
-          .toList();
+      results = allUsers.where((user) {
+        final String lowercaseValue = searchValue.toLowerCase();
+        final String lowercaseName = user["nom"].toLowerCase();
+        final String lowercaseSpeciality =
+            user["specialite"]["nom"].toLowerCase();
+        return lowercaseName.contains(lowercaseValue) ||
+            lowercaseSpeciality.contains(lowercaseValue);
+      }).toList();
     }
 
     setState(() {
@@ -70,16 +75,19 @@ class _SearchPagePatientState extends State<SearchPagePatient> {
               decoration: const InputDecoration(
                 border: OutlineInputBorder(),
                 hintText: 'Recherchez pour un docteur',
-                // label: Text('Recherche'),
                 suffixIcon: Icon(Icons.search),
                 iconColor: Colors.lightBlue,
               ),
-              onChanged: (value) => runFilter(value),
+              onChanged: (value) {
+                setState(() {
+                  searchQuery = value;
+                });
+                runFilter(value);
+              },
             ),
             const SizedBox(height: 20),
             Expanded(
               child: ListView.builder(
-                // scrollDirection: Axis.horizontal,
                 itemCount: foundUsers.length,
                 itemBuilder: (context, index) => Card(
                   key: ValueKey(foundUsers[index]["id"]),
@@ -98,7 +106,6 @@ class _SearchPagePatientState extends State<SearchPagePatient> {
                         ),
                       ),
                     ),
-                    // leading: Text(foundUsers[index]["id"].toString()),
                     title: Text(
                       foundUsers[index]['nom'].toUpperCase(),
                       style: const TextStyle(

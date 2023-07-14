@@ -104,9 +104,11 @@ class _ScheduleScreenState extends State<ScheduleScreen> {
                   DropdownButton<String>(
                     value: selectedStartHour,
                     onChanged: (String? newValue) {
-                      setState(() {
-                        selectedStartHour = newValue!;
-                      });
+                      setState(
+                        () {
+                          selectedStartHour = newValue!;
+                        },
+                      );
                     },
                     items: hours.map((String hour) {
                       return DropdownMenuItem<String>(
